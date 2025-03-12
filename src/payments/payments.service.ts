@@ -5,14 +5,16 @@ import Stripe from 'stripe';
 import config from 'src/config/config';
 import { ConfigType } from '@nestjs/config';
 import { catchError, from, map, Observable } from 'rxjs';
-import { RpcException } from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { Request, Response } from 'express';
+import { NATS_SERVICE } from 'src/config/microservices';
 
 @Injectable()
 export class PaymentsService {
   constructor(
     @Inject(config.KEY)
     private readonly configService: ConfigType<typeof config>,
+    @Inject(NATS_SERVICE) private readonly client: ClientProxy,
   ) {}
   private readonly stripe = new Stripe(this.configService.STRIPE_SECRET_KEY);
 
@@ -84,7 +86,13 @@ export class PaymentsService {
     switch (event.type) {
       case 'charge.succeeded':
         const chargeSucceeded = event.data.object;
-        console.log({ metadata: chargeSucceeded.metadata });
+
+        const payload = {
+          stripePaymentId: chargeSucceeded.id,
+          orderId: chargeSucceeded.metadata.orderId,
+          receiptUrl: chargeSucceeded.receipt_url,
+        };
+        this.client.emit('payment.succeeded', payload);
         break;
 
       default:

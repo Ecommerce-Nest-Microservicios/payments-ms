@@ -4,11 +4,12 @@ import { environments } from './config/environments';
 import config from './config/config';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
+import { NatsModule } from './transports/nats.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: environments[process.env.NODE_ENV],
+      envFilePath: '.env',
       load: [config],
       isGlobal: true,
       validationSchema: Joi.object({
@@ -24,15 +25,14 @@ import * as Joi from 'joi';
             }
           })
           .required(),
-        DATABASE_URL: Joi.string().required(),
         STRIPE_SECRET_KEY: Joi.string().required(),
         STRIPE_SUCCESS_URL: Joi.string().required(),
         STRIPE_CANCEL_URL: Joi.string().required(),
         STRIPE_WEBHOOK_SECRET: Joi.string().required(),
       }),
     }),
-
     PaymentsModule,
+    NatsModule,
   ],
 })
 export class AppModule {}
