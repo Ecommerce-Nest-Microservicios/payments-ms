@@ -17,7 +17,7 @@ import { NatsModule } from './transports/nats.module';
           .custom((value, helpers) => {
             const servers = value.split(',');
             if (servers.every((server: any) => typeof server === 'string')) {
-              return servers;
+              return value;
             } else {
               return helpers.message({
                 'any.invalid': 'NATS_SERVERS must be a valid list of strings',
