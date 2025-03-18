@@ -33,6 +33,7 @@ async function bootstrap() {
   await app.startAllMicroservices();
   await app.listen(process.env.PORT ?? 3003);
 
+  console.log('payments-ms');
   logger.log(`Payments Microservice running...`);
 }
 bootstrap();
