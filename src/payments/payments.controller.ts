@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Req, Res, Logger } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
-import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { Request, Response } from 'express';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 
