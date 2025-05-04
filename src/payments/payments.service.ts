@@ -1,6 +1,5 @@
-import { Inject, Injectable, Req } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreatePaymentDto } from './dto/create-payment.dto';
-import { UpdatePaymentDto } from './dto/update-payment.dto';
 import Stripe from 'stripe';
 import config from 'src/config/config';
 import { ConfigType } from '@nestjs/config';
@@ -22,14 +21,14 @@ export class PaymentsService {
     createPaymentDto: CreatePaymentDto,
   ): Observable<Stripe.Checkout.Session> {
     const { items, currency, orderId } = createPaymentDto;
-
+    console.log(items);
     const line_items = items.map((item) => ({
       price_data: {
         currency: currency,
         product_data: {
           name: item.name,
         },
-        unit_amount: item.price,
+        unit_amount: item.price * 100,
       },
       quantity: item.quantity,
     }));
