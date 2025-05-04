@@ -29,11 +29,11 @@ export class PaymentsService {
         product_data: {
           name: item.name,
         },
-        unit_amount: Math.round(item.price * 100),
+        unit_amount: item.price * 100,
       },
       quantity: item.quantity,
     }));
-
+    console.log(line_items);
     return from(
       this.stripe.checkout.sessions.create({
         payment_intent_data: {
