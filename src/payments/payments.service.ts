@@ -21,7 +21,6 @@ export class PaymentsService {
     createPaymentDto: CreatePaymentDto,
   ): Observable<Stripe.Checkout.Session> {
     const { items, currency, orderId } = createPaymentDto;
-    console.log(items);
     const line_items = items.map((item) => ({
       price_data: {
         currency: currency,
@@ -32,7 +31,7 @@ export class PaymentsService {
       },
       quantity: item.quantity,
     }));
-    console.log(line_items);
+
     return from(
       this.stripe.checkout.sessions.create({
         payment_intent_data: {
